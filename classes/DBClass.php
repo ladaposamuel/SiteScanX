@@ -1,99 +1,131 @@
 <?php
 
-require_once( '../config/DBConfig.php' );
+$filepath = realpath(dirname(__FILE__));
+include_once($filepath . '/../config/DBConfig.php');
 
 //Database class to connect to database and fire queries
-class DBClass extends DBConfig
+class DBClass
 {
-    var $classQuery;
-    var $link;
+    public $classQuery;
+    private $conn;
+    private $statement;
 
-    var $errno = '';
-    var $error = '';
+    public $errno = '';
+    public $error = '';
 
     // Connects to the database
-    function DBClass()
-    {
-        // Load settings from parent class
-        $settings = DBConfig::getSettings();
 
-        // Get the main settings from the array we just loaded
-        $host = $settings['dbhost'];
-        $name = $settings['dbname'];
-        $user = $settings['dbusername'];
-        $pass = $settings['dbpassword'];
+    public function __construct()
+    {
+        // get DBConfig credentials
+        $dbCredentials = new DBConfig();
+        $credentials = $dbCredentials->credentials();
 
         // Connect to the database
-        $this->link = new mysqli( $host , $user , $pass , $name );
+        $this->conn = new mysqli(
+            $credentials['dbhost'],
+            $credentials['dbusername'],
+            $credentials['dbpassword'],
+            $credentials['dbname']
+        );
     }
+
 
     // Executes a database query
-    function query( $query )
+    public function query( $query )
     {
         $this->classQuery = $query;
-        return $this->link->query( $query );
+        return $this->conn->query( $query );
     }
 
-    function escapeString( $query )
+    public function escapeString( $query )
     {
-        return $this->link->escape_string( $query );
+        return $this->conn->real_escape_string( $query );
     }
 
     // Get the data return int result
-    function numRows( $result )
+    public function numRows( $result )
     {
-        return $result->num_rows;
+        if ($result instanceof mysqli_result) {
+            return $result->num_rows;
+        }
+        return 0;
     }
 
-    function lastInsertedID()
+    public function lastInsertedID()
     {
-        return $this->link->insert_id;
+        return $this->conn->insert_id;
     }
 
     // Get query using assoc method
-    function fetchAssoc( $result )
+    public function fetchAssoc( $result )
     {
         return $result->fetch_assoc();
     }
 
     // Gets array of query results
-    function fetchArray( $result , $resultType = MYSQLI_ASSOC )
+    public function fetchArray( $result , $resultType = MYSQLI_ASSOC )
     {
         return $result->fetch_array( $resultType );
     }
 
     // Fetches all result rows as an associative array, a numeric array, or both
-    function fetchAll( $result , $resultType = MYSQLI_ASSOC )
+    public function fetchAll( $result , $resultType = MYSQLI_ASSOC )
     {
         return $result->fetch_all( $resultType );
     }
 
     // Get a result row as an enumerated array
-    function fetchRow( $result )
+    public function fetchRow( $result )
     {
         return $result->fetch_row();
     }
 
     // Free all MySQL result memory
-    function freeResult( $result )
+    public function freeResult( $result )
     {
-        $this->link->free_result( $result );
+        if ($result instanceof mysqli_result) {
+            $this->conn->free_result( $result );
+        }
     }
 
     //Closes the database connection
-    function close()
+    public function close()
     {
-        $this->link->close();
+        $this->conn->close();
     }
 
-    function sql_error()
+    public function sql_error()
     {
-        if( empty( $error ) )
+        if( empty( $this->error ) )
         {
-            $errno = $this->link->errno;
-            $error = $this->link->error;
+            $errno = $this->conn->errno;
+            $error = $this->conn->error;
         }
         return $errno . ' : ' . $error;
     }
+
+    public function bind_param($types, ...$params) {
+        try {
+            if (!$this->statement) {
+                throw new Exception('Statement not found.');
+            }
+
+            $bindParams = [$types];
+            foreach ($params as $param) {
+                $bindParams[] = $param;
+            }
+
+            $result = call_user_func_array([$this->statement, 'bind_param'], $bindParams);
+
+            if (!$result) {
+                throw new Exception('Unable to bind parameters.');
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return false;
+        }
+
+        return true;
+    }
 }
-?>
