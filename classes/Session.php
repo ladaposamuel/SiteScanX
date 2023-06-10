@@ -26,24 +26,12 @@ class Session
         self::init();
         if (!self::get("adminLogin")) {
             self::destroy();
-            header("Location: index.php");
+            header("Location: " . getBaseUrl() . "/index.php");
+        } else {
+            return self::get("adminInfo");
         }
     }
 
-    public static function checkLogin()
-    {
-        if (self::get("login")) {
-            header("Location:exam.php");
-        }
-    }
-
-    public static function checkAdminLogin()
-    {
-        self::init();
-        if (self::get("adminLogin")) {
-            header("Location:index.php");
-        }
-    }
 
     public static function destroy()
     {
