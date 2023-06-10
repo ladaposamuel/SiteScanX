@@ -11,3 +11,10 @@ function getBaseUrl()
 
     return $protocol.'://'.$hostName;
 }
+
+function cleanString($data){
+    $data = trim($data);
+    $data = stripcslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
