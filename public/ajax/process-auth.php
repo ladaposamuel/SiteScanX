@@ -30,24 +30,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $result = $loginOBJ->login($email, $password);
 
-            if ($result['status']) {
-                $_SESSION['email'] = $email;
-            }
-
             echo $apiHelper->formatResponse($result['status'], $result['message'], $result['status_code']);
             break; //END login
 
         case 'logout':
+
             $result = $loginOBJ->logout();
 
-            if ($result['status'] === true) {
-                $response['success'] = true;
-            }
-
-            echo $apiHelper->formatResponse($result['status'], $result['message'],$result['status_code']);
-
-            break; //END login
-
+            echo $apiHelper->formatResponse($result['status'], $result['message'], $result['status_code']);
+            break; //END login=
         default:
             break; // END 'default'
 

@@ -5,6 +5,7 @@ include_once($filepath . '/DBClass.php');
 include_once($filepath . '/Session.php');
 include_once($filepath . '/../includes/_helpers.php');
 
+Session::init();
 
 class AuthClass
 {
@@ -64,8 +65,16 @@ class AuthClass
                 ];
             }
 
-            Session::init();
             Session::set("adminLogin", true);
+            Session::set("adminInfo", [
+                'id' => $row['id'],
+                'name' => $row['firstname'] . ' ' . $row['lastname'],
+                'email' => $row['email'],
+                'user_status' => $row['user_status'],
+                'user_type' => $row['user_type'],
+                'created_at' => $row['created_at'],
+                'updated_at' => $row['updated_at']
+            ]);
 
             return [
                 'status' => true,
@@ -92,10 +101,14 @@ class AuthClass
 
         Session::destroy();
 
-        return header("Location: ../index.php");
+        return [
+            'status' => true,
+            'message' => 'Sign-out successful!',
+            'status_code' => 200
+        ];
     }
 
 
-
 }
+
 ?>
