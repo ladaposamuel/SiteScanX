@@ -1,21 +1,17 @@
 <?php
+
 class DBConfig
 {
-    var $credentials;
+    private $credentials = [
+        'dbhost' => 'localhost',
+        'dbname' => 'sitescanx',
+        'dbusername' => 'root',
+        'dbpassword' => ''
+    ];
 
-    function credentials()
+    public function credentials()
     {
-        // Database variables
-        // Host name
-        $credentials['dbhost'] = 'localhost';
-        // Database name
-        $credentials['dbname'] = 'sitescanx';
-        // Username
-        $credentials['dbusername'] = 'root';
-        // Password
-        $credentials['dbpassword'] = '';
-
-        return $credentials;
+        return $this->credentials;
     }
 }
 ?>

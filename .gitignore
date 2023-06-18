@@ -2,3 +2,6 @@
 .env.backup
 /.idea
 .DS_Store
+public/sitemap.html
+/vendor
+/node_modules
