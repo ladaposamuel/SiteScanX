@@ -112,6 +112,7 @@ $prevScannedResults = getPrevScan(false);
                         </div>
                     </div>
 
+                    <?php if(count($prevScannedResults) > 0) {?>
                     <div class="col-xl-12" id="scanResultsBox">
                         <div class="card mb-4">
                             <div class="card-header">
@@ -124,12 +125,14 @@ $prevScannedResults = getPrevScan(false);
                                     $count = 1;
                                     foreach ($prevScannedResults as $prevScannedResult) {
                                         ?>
-                                        <li class="list-group-item"><?= $count++ ?>. <?php echo $prevScannedResult['url'] ?></li>
+                                        <li class="list-group-item"><?= $count++ ?>
+                                            . <?php echo $prevScannedResult['url'] ?></li>
                                     <?php } ?>
                                 </ul>
                             </div>
                         </div>
                     </div>
+                    <?php }?>
                 </div>
             </div>
         </main>

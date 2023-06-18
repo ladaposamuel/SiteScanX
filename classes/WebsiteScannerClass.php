@@ -50,6 +50,7 @@ class WebsiteScannerClass
         $this->logMessage('Homepage scan completed.');
         $this->logMessage($this->getInternalLinksCount() . ' internal links found.');
         $this->storeInternalLinks();
+        $this->generateSitemap();
         $this->initiateCronJob();
     }
 
@@ -189,6 +190,40 @@ class WebsiteScannerClass
         }
 
         return $this->cachedCronJobCommand;
+    }
+
+    public function generateSitemap()
+    {
+        $query = "SELECT url FROM internal_links";
+        $result = $this->db->query($query);
+
+        if ($result) {
+            $urls = $result->fetch_all(MYSQLI_ASSOC);
+        } else {
+
+            $urls = array();
+        }
+
+        $sitemapContent = $this->generateSitemapContent($urls);
+        $sitemapFilePath = $_SERVER['DOCUMENT_ROOT'] . '/public/sitemap.html';
+        file_put_contents($sitemapFilePath, $sitemapContent);
+        $this->logMessage('Sitemap.html file Generated successfully', 'green');
+
+    }
+
+    private function generateSitemapContent($urls)
+    {
+        $sitemapContent = '<html><head><title>Sitemap</title></head><body>';
+        $sitemapContent .= '<h1>Sitemap</h1><ul>';
+
+        foreach ($urls as $row) {
+            $url = $row['url'];
+            $sitemapContent .= '<li><a href="' . $url . '">' . $url . '</a></li>';
+        }
+
+        $sitemapContent .= '</ul></body></html>';
+
+        return $sitemapContent;
     }
 
 }
