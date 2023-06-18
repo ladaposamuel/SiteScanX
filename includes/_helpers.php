@@ -34,3 +34,12 @@ function getPrevScan($count = true) {
     }
 }
 
+function checkSiteMapfile() {
+    $sitemapFilePath = $_SERVER['DOCUMENT_ROOT'] . '/public/sitemap.html';
+    if(file_exists($sitemapFilePath)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
