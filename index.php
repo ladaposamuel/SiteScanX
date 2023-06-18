@@ -3,6 +3,10 @@
 include "./includes/_process.php";
 include "./includes/_helpers.php";
 
+
+$prevScannedResults = getPrevScan(false);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -38,11 +42,13 @@ include "./includes/_helpers.php";
                 <div class="card-body">
                     <form action="#." method="POST">
                         <div class="form-floating mb-3">
-                            <input class="form-control" id="inputEmail" type="email" name="email" value="ladaposamuel@gmail.com"/>
+                            <input class="form-control" id="inputEmail" type="email" name="email"
+                                   value="ladaposamuel@gmail.com"/>
                             <label for="inputEmail">Email address</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input class="form-control" id="inputPassword" type="password" name="password" placeholder="Password"/>
+                            <input class="form-control" id="inputPassword" type="password" name="password"
+                                   placeholder="Password"/>
                             <label for="inputPassword">Password</label>
                         </div>
                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
@@ -62,15 +68,19 @@ include "./includes/_helpers.php";
         <div class="col-lg-5">
             <h1 class="font-weight-light">SiteScanX</h1>
             <p>View Latest Generated Sitemap</p>
-            <a class="btn btn-primary" href="#!">View Latest Sitemap</a><br>
-            <small>Last Updated: 3 Secs ago</small>
-        </div>
-    </span>
-</div>
+            <?php if (checkSiteMapfile()) { ?>
+                <a class="btn btn-primary" href="public/sitemap.html" target="_blank">View Latest Sitemap</a><br>
+<!--                <small>Last Updated: 3 Secs ago</small>-->
+            <?php } ?>
 
-<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
-<script src="<?php echo getBaseUrl(); ?>/assets/landing-page/js/scripts.js"></script>
+        </div>
+        </span>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="<?php echo getBaseUrl(); ?>/assets/landing-page/js/scripts.js"></script>
 </body>
 </html>
