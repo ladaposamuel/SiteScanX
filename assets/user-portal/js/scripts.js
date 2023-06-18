@@ -69,7 +69,7 @@ $(function () {
             const jsonResponse = await response.json();
 
             if (jsonResponse.status && jsonResponse?.status_code === 200) {
-                window.location.href = window.location.hostname + '/index.php';
+                window.location.href = window.location.protocol + '//' + window.location.host;
             } else {
                 appendAlert(jsonResponse.message, 'warning')
             }

@@ -70,9 +70,12 @@ $prevScannedResults = getPrevScan(false);
             <p>View Latest Generated Sitemap</p>
             <?php if (checkSiteMapfile()) { ?>
                 <a class="btn btn-primary" href="public/sitemap.html" target="_blank">View Latest Sitemap</a><br>
-<!--                <small>Last Updated: 3 Secs ago</small>-->
-            <?php } ?>
+                <!--                <small>Last Updated: 3 Secs ago</small>-->
+            <?php } else { ?>
 
+                <small>No sitemap.html found yet, please check again in the next hour or contact an Admin.</small>
+
+            <?php } ?>
         </div>
         </span>
     </div>
