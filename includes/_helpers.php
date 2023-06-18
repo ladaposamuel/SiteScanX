@@ -18,3 +18,19 @@ function cleanString($data){
     $data = htmlspecialchars($data);
     return $data;
 }
+
+function getPrevScan($count = true) {
+    $db = new DBClass();
+    $query = "SELECT " . ($count ? "COUNT(*)" : "*") . " FROM internal_links";
+    $stmt = $db->prepare($query);
+    if(!$count) {
+        $stmt->execute();
+        $resultSet = $stmt->get_result();
+        return $resultSet->fetch_all(MYSQLI_ASSOC);
+    } else {
+        $stmt->execute();
+        $result = $stmt->fetch_row();
+        return $result[0];
+    }
+}
+
