@@ -105,27 +105,22 @@ class DBClass
         return $errno . ' : ' . $error;
     }
 
-    public function bind_param($types, ...$params) {
-        try {
-            if (!$this->statement) {
-                throw new Exception('Statement not found.');
-            }
+    public function prepare($sql, $params = array()) {
+        $stmt = $this->conn->prepare($sql);
 
-            $bindParams = [$types];
-            foreach ($params as $param) {
-                $bindParams[] = $param;
+        if ($stmt !== false) {
+            if (!empty($params)) {
+                // Bind params to the statement
+                $types = str_repeat('s', count($params)); // Assume all params are strings
+                $stmt->bind_param($types, ...$params);
             }
-
-            $result = call_user_func_array([$this->statement, 'bind_param'], $bindParams);
-
-            if (!$result) {
-                throw new Exception('Unable to bind parameters.');
-            }
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-            return false;
+            return $stmt; // Return the prepared statement object
         }
 
-        return true;
+        // If prepare() failed, set errno and error properties
+        $this->errno = $this->conn->errno;
+        $this->error = $this->conn->error;
+        return false;
     }
+
 }

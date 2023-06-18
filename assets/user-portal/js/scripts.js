@@ -27,7 +27,13 @@ window.addEventListener('DOMContentLoaded', event => {
 
 $(function () {
 
+    let scanLogBox = $('#scanLogBox');
+    scanLogBox.hide();
+
+
     const logOutBtn = document.querySelector('#logoutBtn');
+    const initateScanBtn = document.querySelector('#initateScanBtn');
+    const viewScannedResultsBtn = document.querySelector('#viewScannedResultsBtn');
     const alertPlaceholder = document.querySelector('#liveAlertPlaceholder');
 
 
@@ -71,6 +77,59 @@ $(function () {
             appendAlert('An error occurred while signing out ' + error, 'warning')
         } finally {
         }
+    });
+
+    var stopFetching = false; // Flag variable to control the fetching process
+
+    function fetchLog(url) {
+        $.ajax({
+            url: '../../../admin/ajax/process-scan.php', // Replace 'log.php' with the actual PHP file name
+            data: {url: url},
+            dataType: 'html',
+            type: 'POST',
+            success: function (response) {
+                $('#log').html(response);
+
+                if (response.includes('Homepage scan completed')) {
+                    stopFetching = true;
+                    return;
+                }
+
+                if (!stopFetching) {
+                    setTimeout(function () {
+                        fetchLog(url);
+                    }, 1000);
+                }
+            },
+            error: function () {
+                $('#log').html('Error fetching log.');
+                if (!stopFetching) {
+                    setTimeout(function () {
+                        fetchLog(url);
+                    }, 1000);
+                }
+            }
+        });
+    }
+
+
+    initateScanBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+        let webUrlInput = $('#website').val();
+        if (webUrlInput) {
+            scanLogBox.show();
+            fetchLog(webUrlInput);
+        } else {
+            appendAlert('Please enter a valid website url', 'warning')
+        }
+
+    });
+
+    viewScannedResultsBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+
+        // refresh page
+
     });
 
 });

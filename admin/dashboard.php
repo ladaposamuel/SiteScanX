@@ -5,6 +5,7 @@ include "../includes/_helpers.php";
 
 $adminInfo = Session::checkAdminSession();
 
+$prevScannedResults = getPrevScan(false);
 
 ?>
 
@@ -77,19 +78,59 @@ $adminInfo = Session::checkAdminSession();
                                         <label for="email" class="form-label">Website URL</label>
                                         <input type="url" class="form-control" id="website" name="website"
                                                placeholder="https://yourwebsite.com">
-                                        <small class="text-muted">Please note only the homepage hyperlinks will be scanned!</small>
+                                        <small class="text-muted">Please note only the homepage hyperlinks will be
+                                            scanned!</small>
                                     </div>
                                     <hr class="my-4">
-                                    <button class="w-100 btn btn-primary btn-sm" type="submit">Initiate Scanner
+                                    <button class="w-100 btn btn-primary btn-sm" id="initateScanBtn" type="submit">
+                                        Initiate Scanner
                                         <i class="fas fa-search"></i>
                                     </button>
+
+
+                                    <?php
+                                    if (count($prevScannedResults) > 0) {
+                                        ?>
+                                        <button class="w-100 btn btn-success btn-sm mt-4" id="viewScannedResults">
+                                            <i class="fas fa-list"></i>
+                                            View Previously Scanned Results
+                                        </button>
+                                    <?php } ?>
                                 </form>
                             </div>
                         </div>
                     </div>
+                    <div class="col-xl-6" id="scanLogBox">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-search me-1"></i>
+                                Scan Logs
+                            </div>
+                            <div class="card-body">
+                                <div id="log"></div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="col-xl-12" id="scanResultsBox">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-search me-1"></i>
+                                Scan Results
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <?php
+                                    $count = 1;
+                                    foreach ($prevScannedResults as $prevScannedResult) {
+                                        ?>
+                                        <li class="list-group-item"><?= $count++ ?>. <?php echo $prevScannedResult['url'] ?></li>
+                                    <?php } ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
         </main>
         <footer class="py-4 bg-light mt-auto">
