@@ -10,7 +10,16 @@ review.
 ## Video Demo
 https://github.com/ladaposamuel/SiteScanX/assets/9302799/20dc9f77-532a-4677-874f-566d5aeb67aa
 
+## How to set-up
+1. Clone the project into you working directory
+2. Import the Database dump file in the dump/sitescanx.sql file into your database.
+3. Update the database credentials in the config/DBConfig.php file
+4. Access the project from your browser and login to enter admin portal.
 
+## TODO
+- [] Complete tests setup
+- [] Complete Travis integration
+- [] Handle errors efficiently
 
 ## Built With
 
